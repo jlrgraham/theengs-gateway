@@ -258,7 +258,7 @@ class Gateway:
                         "[DIS] Discovered Trackers: %s", self.discovered_trackers
                     )
             else:
-                logger.info(
+                logger.debug(
                     "Received `%s` from `%s` topic",
                     msg.payload.decode(),
                     msg.topic,
