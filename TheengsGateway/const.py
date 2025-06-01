@@ -1,0 +1,8 @@
+RMAC_DISCOVERY_FILTER_LIST = [
+    "GAEN",
+    "MS-CDP",
+    "APPLE_CONT",
+    "APPLE_CONTAT",
+    "APPLEDEVICE",
+    "APPLEWATCH",
+]
