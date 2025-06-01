@@ -22,7 +22,7 @@ import sys
 import uuid
 from pathlib import Path
 
-from .ble_gateway import run
+from .ble_gateway import run, logger
 from .config import (
     DEFAULT_CONFIG,
     merge_args_with_config,
@@ -30,6 +30,8 @@ from .config import (
     read_configuration,
     write_configuration,
 )
+
+from .const import RMAC_DISCOVERY_FILTER_LIST
 
 
 def main() -> None:
@@ -65,18 +67,10 @@ def main() -> None:
         configuration["discovery_filter"] = configuration["discovery_filter"].strip("[]").split(",")
 
     # Remove possible discovery filter remnants not required after the RMAC introduction
-    if "GAEN" in configuration["discovery_filter"]:
-        configuration["discovery_filter"].remove("GAEN")
-    if "MS-CDP" in configuration["discovery_filter"]:
-        configuration["discovery_filter"].remove("MS-CDP")
-    if "APPLE_CONT" in configuration["discovery_filter"]:
-        configuration["discovery_filter"].remove("APPLE_CONT")
-    if "APPLE_CONTAT" in configuration["discovery_filter"]:
-        configuration["discovery_filter"].remove("APPLE_CONTAT")
-    if "APPLEDEVICE" in configuration["discovery_filter"]:
-        configuration["discovery_filter"].remove("APPLEDEVICE")
-    if "APPLEWATCH" in configuration["discovery_filter"]:
-        configuration["discovery_filter"].remove("APPLEWATCH")
+    for i in RMAC_DISCOVERY_FILTER_LIST:
+        if i in configuration["discovery_filter"]:
+            configuration["discovery_filter"].remove(i)
+            logger.warning("Removed RMAC covered discovery filter entry: %s", i)
 
     write_configuration(configuration, config_path)
     run(configuration, config_path)
